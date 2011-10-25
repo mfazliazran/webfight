@@ -12,6 +12,7 @@ def analysis(http_objs):
     clickjacking_rows = []
     hsts_rows = []
     csp_rows = []
+    accesscontrol_rows = []
 
     rpt = report.htmltags()
 
@@ -27,14 +28,14 @@ def analysis(http_objs):
         if response_headers[i].has_key("X-Frame-Options"):
             clickjacking_rows.append("<td>" + rpt.href(full_path) + "</td><td>" + response_headers[i]["X-Frame-Options"] + "</td>")
         if response_headers[i].has_key("Strict-Transport-Security"):
-            hsts_rows.append("<td>" + rpt.href(full_path) + "</td><td>" + response_headers[i]["X-Frame-Options"] + "</td>")
+            hsts_rows.append("<td>" + rpt.href(full_path) + "</td><td>" + response_headers[i]["Strict-Transport-Security"] + "</td>")
         if response_headers[i].has_key("X-Content-Security-Policy"):
-            csp_rows.append("<td>" + rpt.href(full_path) + "</td><td>" + response_headers[i]["X-Frame-Options"] + "</td>")
+            csp_rows.append("<td>" + rpt.href(full_path) + "</td><td>" + response_headers[i]["X-Content-Security-Policy"] + "</td>")
+        if response_headers[i].has_key("Access-Control-Allow-Origin"):
+            accesscontrol_rows.append("<td>" + rpt.href(full_path) + "</td><td>" + response_headers[i]["Access-Control-Allow-Origin"] + "</td>")
 
-
-
-    collums = {"ClickJacking":["Path", "Diretive"], "HSTS":["Path", "Diretive"], "CSP":["Path", "Diretive"]}
-    rows = {"ClickJacking":clickjacking_rows, "HSTS":hsts_rows, "CSP":csp_rows}
+    collums = {"HeadersSecurity":["Path", "Diretive"], "HSTS":["Path", "Diretive"], "CSP":["Path", "Diretive"], "AccessControl":["Path", "Diretive"]}
+    rows = {"HeadersSecurity":clickjacking_rows, "HSTS":hsts_rows, "CSP":csp_rows, "AccessControl":accesscontrol_rows}
 
     tip = "Tip: <a href='http://www.mcafee.com/us/resources/white-papers/foundstone/wp-recent-advances-web-app-security.pdf' target='_blank'>Recent Advances in Web Application Security</a>"
     

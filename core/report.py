@@ -71,5 +71,5 @@ class htmltags:
     def make_module_report_file(self, content, filename):
         filename = utils.__workspace_path__ + filename
         outfile = open(filename, "w")
-        outfile.write(content.encode('utf-8'))
+        outfile.write(content)
         outfile.close()

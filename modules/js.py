@@ -34,13 +34,13 @@ def get_script_body(urls, requests, request_headers, response_data):
         for script in body_js:
             if utils.md5_object(full_path + script) not in hash_group:
                if full_path not in js_body_path:
-                   content = jsbeautifier.beautify(script)
+                   content = jsbeautifier.js_beautify(script, "")
                    content = utils.syntaxhighlighter("js", rpt.href(full_path), utils.html_escape(content))
                    js_body_rows.append("<td>" + rpt.href(full_path) + "</td><td>" + rpt.href(str(i) + "body") + "</td>")
                    hash_group.append(utils.md5_object(full_path + script))
                    js_body_path.append(full_path)
                else:
-                   content = jsbeautifier.beautify(script)
+                   content = jsbeautifier.js_beautify(script, "")
                    content = utils.syntaxhighlighter("js", rpt.href(full_path), utils.html_escape(content))
                rpt.make_module_report_file(content, str(i) + "body")
 
@@ -76,7 +76,7 @@ def js_analys(urls, requests, response_data, request_headers, response_headers):
             if "javascript" in str(response_headers[i]["Content-Type"]) and full_path not in js_full_path:
                 source_warnings = utils.grep_statement("javascript_patterns", response_data[i], "source")
                 sink_warnings = utils.grep_statement("javascript_patterns", response_data[i], "sink")
-                content = jsbeautifier.beautify(response_data[i])
+                content = jsbeautifier.js_beautify(response_data[i], "")
                 content = utils.syntaxhighlighter("js", rpt.href(full_path), content)
                 if request_headers[i].has_key("Referer") is True:
                     origin = rpt.href(request_headers[i]["Referer"])
