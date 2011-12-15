@@ -23,7 +23,6 @@ def xml_analys(urls, requests, response_body, response_headers):
 
         if response_headers[i].has_key("Content-Type"):
             if "xml" in str(response_headers[i]["Content-Type"]) and full_path not in xml_full_path:
-
                 xml_full_path.append(full_path)
                 content = utils.syntaxhighlighter("xml", rpt.href(full_path), response_body[i])
                 xml_rows.append("<td>" + rpt.href(full_path) + "</td><td>" + rpt.href(str(i) + "file") + "</td>")

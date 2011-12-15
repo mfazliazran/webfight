@@ -37,7 +37,6 @@ def analysis(http_objs):
         out_escope = request_URLs[i]["out_escope"]
         full_path = protocol + "://" + url + path
 
-        
         if out_escope is False:
             if status[i] != 0 and status[i] < 300:
                 if request_methods[i] == "GET" and query != "":

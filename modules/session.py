@@ -3,6 +3,7 @@
 
 from core import report
 from conf import utils
+import re
 
 rpt = report.htmltags()
 
@@ -13,14 +14,12 @@ def analysis(http_objs):
     
     headers = {"Set-Cookie":"Cookie write",
     "Set-Cookie2":"Cookie write"}
-    
+    sessions_patterns = r'(ASP.NET_SessionId|CFID|CFTOKEN|SESSID|SESSIONID|VIEWSTATE|ZENID|SITESERVER|ASPXAUTH)'
+     
     set_cookie_rows = []
-
     sessions_id_rows = []
-    sessions_id = []
+    cookie_diff = []
     
-    sessions_pattern = utils.parser_xml("conf/statements/session_patterns.xml", "item", "")
-
     for i in xrange(0, requests):
         protocol = request_URLs[i]["protocol"]
         url = request_URLs[i]["url"]
@@ -33,13 +32,15 @@ def analysis(http_objs):
         for header in response_headers[i].iterkeys():
             if header in headers.iterkeys():            
                 set_cookie_rows.append("<td>" + rpt.href(full_path) + "</td><td>" + str(response_headers[i][header]) + "</td>")
-                        
-        for item in sessions_pattern:
-            if item in query:
-                set_cookie_rows.append("<td>" + rpt.href(full_path) + "</td><td>" + query + "</td>")
+                if header not in cookie_diff:
+                    cookie_diff.append("<td>" + rpt.href(full_path) + "</td><td>" + str(response_headers[i][header]) + "</td>")
 
-    collums = {"Cookies":["Path", "Set-Cookie"], "SessionIDUrl":["Path", "Query"]}
-    rows = {"Cookies":set_cookie_rows, "SessionIDUrl":sessions_id_rows}
+        session_id_url = re.findall(sessions_patterns, query, re.I)
+        if session_id_url != "[]":
+            sessions_id_rows.append("<td>" + rpt.href(full_path) + "</td><td>" + query + "</td>")
+
+    collums = {"Cookies":["Path", "Set-Cookie"], "SessionIDUrl":["Path", "Query"], "CookieDiff":["Path", "Query"]}
+    rows = {"Cookies":set_cookie_rows, "SessionIDUrl":sessions_id_rows, "CookieDiff":cookie_diff}
     
     tip = "Tip: <a href='https://www.owasp.org/index.php/Session_Management_Cheat_Sheet' target='_blank'>Session Management Cheat Sheet</a> and <a href='https://www.owasp.org/index.php/Testing_for_Session_Management' target='_blank'>Testing for Session Management</a>"
 

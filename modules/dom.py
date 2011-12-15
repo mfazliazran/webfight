@@ -24,7 +24,7 @@ def grep_domobjects(http_objs, requests, response_data, dom_regex):
 
         full_path = protocol + "://" + url + path
         
-        content = re.findall(eval(dom_regex), response_data[i]) 
+        content = re.findall(eval(dom_regex), response_data[i], re.I) 
         content = str(content)
         if content != "[]":
             if utils.md5_object(full_path + utils.html_escape(content)) not in hash_group:
@@ -41,14 +41,14 @@ def analysis(http_objs):
 
     dom_objects_regex = {"comments":"""r'(<!--.*?-->)'""",
         "hiddenfields":"""r'(type=hidden.*?" />|type="hidden".*?" />)'""",
-        "forms":"""r'(<form.*?</form>)'""",
-        "iframe":"""r'(<iframe.*?</iframe>)'""",
+        "forms":"""r'(?s)<form.+?</form>'""",
+        "iframe":"""r'(?s)<iframe.+?</iframe>'""",
         "passwordfields":"""r'(type=password.*?" />|type="password".*?" />)'""",
         "fileuploads":"""r'(<INPUT TYPE=FILE.*?">|<input type=file.*?">|<input type="file".*?" />)'""",
-        "applets":"""r'(<applets.*?</applets>)'""",
-        "objects":"""r'(<objects.*?</objects>)'""",
-        "embeds":"""r'(<embed.*?>)'""",
-        "FIXME-TODO":"""r'(#FIXME|#fixme|#TODO|#todo)'"""}
+        "applets":"""r'(?s)<applet.+?</applet>'""",
+        "objects":"""r'(?s)<object.+?</object>'""",
+        "embeds":"""r'(?s)<embed.+?>'""",
+        "FIXME-TODO":"""r'(#fixme|#todo)'"""}
 
     rows_tables = []
     for i in dom_objects_regex.keys():

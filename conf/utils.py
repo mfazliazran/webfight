@@ -119,6 +119,7 @@ def curl_conn():
         else:
             curl_conn = "curl -C - -O --proxy " + conf_proxy[3]["usr"] + ":" + conf_proxy[4]["psw"] + "@" + conf_proxy[2]["address"]
 
+    print curl_conn
     return curl_conn
 
 
@@ -136,13 +137,6 @@ def make_workspace():
     #recria o workspace
     makedirs(__workspace_path__)
 
-
-def findBestEncoding(string, encoding='utf-8'):
-    result = string
-    if isinstance(string, basestring):
-        if not isinstance(string, unicode):
-            result = unicode(string, encoding, errors='ignore')
-    return result
     
 def print_info(status, message):
 
